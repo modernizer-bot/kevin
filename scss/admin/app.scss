@@ -1,0 +1,188 @@
+
+
+.Admin {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+
+    &-Header {
+        height: $--admin-header-height;
+        background-color: $--color-white;
+        border-bottom: 1px solid $--border-color-lighter;
+    }
+
+    &-Container {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        min-height: 0;
+        background-color: $--background-color-base;
+        overflow: hidden;
+    }
+
+    &-Aside {
+        display: flex;
+        background-color: $--color-white;
+    }
+
+    &-Main {
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        overflow: auto;
+    }
+
+    &-Body {
+        display: flex;
+        flex-direction: column;
+        min-width: 960px;
+        min-height: 100%;
+        padding: $--space-md $--space-lg;
+        box-sizing: border-box;
+    }
+
+    &-Wrapper {
+        flex: 1;
+        background-color: #FFF;
+        min-height: 0;
+    }
+
+    &-ScrollBar {
+        height: 100%;
+        .el-scrollbar__view {
+            height: 100%;
+        }
+    }
+
+}
+
+
+// 自定义Select模板
+.UserSelect {
+    .el-select-dropdown__item {
+        height: 85px;
+    }
+    &-item {
+        .info {
+            color: $--color-text-secondary;
+            line-height: 1.5;
+            font-weight: normal;
+        }
+    }
+}
+
+.Login {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    min-height: 600px;
+    background-image: url('/images/bg.jpeg');
+    background-size: cover;
+
+    &-bgcolor {
+        position: absolute;
+        background-color: rgba(#000, 0.5);
+        background-position: center;
+        z-index: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    &-Wrapper {
+        position: relative;
+        margin: 50px 0 20px;
+        display: flex;
+        z-index: 1;
+    }
+
+    &-Copyright {
+        color: $--color-text-placeholder;
+        font-size: $--font-size-small;
+    }
+
+    &-Banner {
+        flex-shrink: 0;
+        width: 400px;
+        background-color: $--color-primary;
+    }
+    &-Body {
+        flex-shrink: 0;
+        width: 400px;
+        background-color: rgba(#fff, 0.8);
+        // backdrop-filter: saturate(100%) blur(20px);
+        padding: 60px 80px;
+        box-sizing: border-box;
+    }
+
+    &-Menu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $--font-size-large;
+        font-weight: bold;
+        margin-bottom: $--space-lg;
+
+        a {
+            color: $--color-text-primary;
+            border-bottom: 4px solid transparent;
+            padding: $--space-base 0;
+            &.active {
+                color: $--color-text-primary;
+                border-bottom-color: $--color-primary;
+            }
+        }
+        a + a {
+            margin-left: $--space-lg;
+        }
+    }
+
+    &-Form {
+        &-link {
+            line-height: 1.5;
+        }
+
+        &-vcode_img {
+            width: 100px;
+            height: 36px;
+            margin-left: $--space-base;
+            img {
+                width: 100%;
+                height: 100%;
+                display: block;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.bvambient_particle {
+    position: absolute;
+    pointer-events: none;
+    transition: top linear, left linear;
+    background-color: rgba(#000, 0.2);
+}
+.Login-Form {
+    &-link .el-form-item__content {
+        line-height: 1.5;
+    }
+    &-btn.el-form-item {
+        margin-top: 40px;
+        margin-bottom: 0!important;
+    }
+    &-vcode .el-input-group__append {
+        width:  100px;
+        padding: 0;
+        text-align: center;
+        .el-button {
+            width: 100%;
+            border: 0;
+            padding: 10px;
+        }
+    }
+}

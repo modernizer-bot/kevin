@@ -1,0 +1,48 @@
+/*
+ * element-ui 样式优化
+ * @Author: chandre 
+ * @Date: 2021-04-15 13:09:29 
+ * @Last Modified by: chandre
+ * @Last Modified time: 2021-04-28 16:31:19
+ */
+
+.clearfix {
+    @include clearfix();
+}
+
+// 分页
+.el-pagination {
+    padding: 0;
+}
+
+//el-input 添加前缀
+.el-input-group {
+    .el-input-group__prepend {
+        
+    }
+}
+
+// 多行文本框架，文字输入长度
+
+.el-textarea .el-input__count {
+    line-height: 1;
+}
+
+// 表格展开
+.table-expand {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li {
+        display: flex;
+        padding: 8px ;
+        color: $--color-text-regular;
+        label {
+            flex-shrink: 0;
+            width: 120px;
+            text-align: right;
+            margin-right: 16px;
+            color: $--color-text-secondary;
+        }
+    }
+}

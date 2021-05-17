@@ -1,0 +1,10 @@
+// 页面过渡
+.slide-fade {
+    &-enter-active, &-leave-active {
+        transition: all .3s ease;
+    }
+    &-enter, &-leave-to {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+}
