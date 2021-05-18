@@ -3,7 +3,7 @@
 
         <template slot="menu">
             <a href="javascript:;" class="active">办公设备维修耗材开支</a>
-            <a href="javascript:;" @click="jumpPage('/admin/commodity/report/quarter')">办公设备维修耗材</a>
+            <a href="javascript:;" @click="jumpPage('/admin/commodity/report/quarter')">供货商成交统计</a>
             <a href="javascript:;" @click="jumpPage('/admin/commodity/report/assets')">新增固定资产</a>
         </template>
 

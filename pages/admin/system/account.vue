@@ -39,6 +39,7 @@
                 </template>
             </el-table-column>
 
+            <el-table-column label="验证码限制" prop="limit" width="100" align="center" />
             <el-table-column label="开启状态" v-slot="{ row }" width="100" align="center">
                 <el-switch :value="row.status" :active-value="1" :inactive-value="0" 
                     @click.native="handleChangeStatus(row)"
