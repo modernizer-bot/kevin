@@ -108,9 +108,7 @@
 
             <el-table-column label="经办人" prop="agent" width="80" align="center" />
 
-            <el-table-column label="下单时间" prop="createTime" width="150" v-slot="{ row }"  align="center">
-                {{ $helper.formatDate(row.created_at, 'Y-m-d H:i') }}
-            </el-table-column>
+            <el-table-column label="备注" prop="remark" min-width="120"/>
 
             <el-table-column label="供货时间" width="150" v-slot="{ row }"  align="center">
                 {{ $helper.formatDate(row.supplied_at, 'Y-m-d H:i') }}

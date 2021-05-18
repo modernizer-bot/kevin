@@ -113,12 +113,10 @@
 
             <el-table-column label="使用人" prop="user.name" width="80" align="center" />
 
+            <el-table-column label="备注" prop="remark" min-width="120"/>
+
             <el-table-column label="供货时间" width="150" v-slot="{ row }"  align="center">
                 {{ $helper.formatDate(row.supplied_at, 'Y-m-d H:i') }}
-            </el-table-column>
-
-            <el-table-column label="下单时间" prop="createTime" width="150" v-slot="{ row }"  align="center">
-                {{ $helper.formatDate(row.created_at, 'Y-m-d H:i') }}
             </el-table-column>
 
             <el-table-column label="操作" width="120" v-slot="{ row }" align="center" fixed="right">
