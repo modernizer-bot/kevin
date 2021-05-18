@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 22:58:26 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-16 13:51:47
+ * @Last Modified time: 2021-05-18 13:24:14
  */
 const { Controller } = require('egg');
 const _ = require('lodash')
@@ -79,7 +79,7 @@ s
         const ctx = this.ctx;
         await ctx.validator.Account.update();
         const data = ctx.request.body;
-        return await this.AccountService.updateInfo(data.username, data);
+        return await this.AccountService.updateInfo(data.username, data );
     }
 
     // 修改当前登录账号信息

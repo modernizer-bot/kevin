@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 17:29:54 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-14 20:52:55
+ * @Last Modified time: 2021-05-18 12:33:18
  */
 
 
@@ -25,6 +25,8 @@ module.exports = app => {
         phone: STRING(32),
         // 地址
         address: STRING(32),
+        // 登录次数限制
+        limit: INTEGER,
         // 最后登录ip
         last_ip: STRING(128),
         // 状态

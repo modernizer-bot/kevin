@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 17:27:10 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-16 21:03:38
+ * @Last Modified time: 2021-05-18 13:30:54
  */
 
 const { Service } = require('egg');
@@ -56,11 +56,11 @@ class AccountService extends Service {
                     through: { attributes: [] },
                     attributes: ['id']
                 },
-                
             ],
         });
-        if (!result) ctx.throw(400, '账号不存在');
-        if (!result.phone || _.isEmpty(result.phone)) ctx.throw(400, '手机号码不存在，请与管理员联系');
+
+        if (!result) ctx.throw(400, '账号不存在或已禁止登录');
+
         // 验证密码
         const isCheck = ctx.helper.checkHash(password, result.password);
         if (!isCheck) {
@@ -68,7 +68,6 @@ class AccountService extends Service {
         }
 
         // 验证验证码
-        // 测试账号跳过后台验证
         if (result.phone!='18510255608') {
             const codeCheck = await this.CodeService.checkCode(result.phone, code);
             if (!codeCheck) ctx.throw(400, '验证码不正确');
@@ -76,17 +75,6 @@ class AccountService extends Service {
 
         // 企业账号登录控制
         if (result.type==='company') {
-            // 控制用户每天登录次数 
-            const loginCount = await this.LogModel.count({
-                where: {
-                    type: 1,
-                    account_id: result.id,
-                    created_at: where( fn('DATE_FORMAT', col('created_at'), '%Y%m%d'), "=", fn('DATE_FORMAT', new Date(), '%Y%m%d') ),
-                }
-            });
-
-            loginCount >= 10 && ctx.throw(400, '今天登录次数已达到上限');
-            
             // 控制30天必须修改密码
             const changePass = await this.LogModel.count({
                 where: {
@@ -98,12 +86,11 @@ class AccountService extends Service {
                     }
                 }
             });
-
             !changePass && ctx.throw(403, '请重置密码后再登录');
         }
 
-        const data = _.omit(result.toJSON(), ['password', 'logs']);
-
+        
+        const data = _.omit(result.toJSON(), ['password']);
         const TokenData = {
             id: data.id,
             username: data.username,
@@ -117,20 +104,16 @@ class AccountService extends Service {
         
         // 生成Token
         let token = this.app.jwt.sign(TokenData, {
-            // 过期时间, 12小时
-            expiresIn: '12h'
+            expiresIn: '12h' // 过期时间, 12小时
         });
 
-        // 记录登录IP
         ctx.runInBackground(async () => {
+            // 记录登录IP
             await result.update({ last_ip: ctx.ip });
-        });
-        
-        // 记录登录日志
-        ctx.runInBackground(async () => {
+            // 记录登录日志
             await this.LogService(1, result.id);
         });
-        
+
         return {
             token,
             info: data
@@ -142,15 +125,32 @@ class AccountService extends Service {
      * @param {String} username 账号
      */
     async sendCode(username) {
+        const ctx = this.ctx;
         const result = await this.AccountModel.findOne({
-            attributes: ['id','username','phone'],
-            where: {
-                username,
-                status: 1,
-            }
+            attributes: ['id','username','phone', 'limit', 'type'],
+            where: { username, status: 1 }
         });
-        if (!result) this.ctx.throw(400, '账号不存在');
+        if (!result) ctx.throw(400, '账号不存在或已禁止登录');
+        if (!result.phone || _.isEmpty(result.phone)) ctx.throw(400, '手机号码不存在，请与管理员联系');
+
+        // 限制供货商每日发送短信次数
+        if (result.type==='company') {
+            const sendCount = await this.LogModel.count({
+                where: {
+                    type: 3,
+                    account_id: result.id,
+                    created_at: where( fn('DATE_FORMAT', col('created_at'), '%Y%m%d'), "=", fn('DATE_FORMAT', new Date(), '%Y%m%d') ),
+                }
+            });
+            let limit = result.limit || 5;
+            sendCount >= limit && ctx.throw(400, '今日发送验证码已达到上限！');
+        }
+        // 发送短信验证码
         await this.CodeService.sendCode(result.phone);
+        // 记录发送短信日志
+        ctx.runInBackground(async () => {
+            await this.LogService(3, result.id);
+        });
         return true;
     }
 
@@ -183,7 +183,7 @@ class AccountService extends Service {
         data.type = 'company';
         data.status = 1;
         const result = await this.AccountModel.create(data);
-        return _.pick(result.toJSON(), ['id', 'username', 'name', 'phone', 'address', 'status'])
+        return _.pick(result.toJSON(), ['id', 'username', 'name', 'phone', 'address', 'limit', 'status'])
     }
 
 
@@ -235,7 +235,7 @@ class AccountService extends Service {
         const result = await this.AccountModel.findAll({
             where: $where,
             attributes: [ 
-                'id', 'username', 'name', 'phone', 'address', 'last_ip', 
+                'id', 'username', 'name', 'phone', 'address', 'last_ip', 'limit',
                 'type', 'status', 'updated_at', 'created_at'
             ],
             // 查询绑定的公司信息
@@ -278,6 +278,7 @@ class AccountService extends Service {
      * @param {String} data.password 密码
      * @param {String} data.name 姓名
      * @param {String} data.phone 电话
+     * @param {Number} data.limit 发送验证码次数限制
      * @param {Number} data.status 状态
      */
     async updateInfo(username, data) {
@@ -286,7 +287,7 @@ class AccountService extends Service {
             where: {  username  }
         });
 
-        ['name', 'phone', 'address', 'status', 'password'].forEach(key => {
+        ['name', 'phone', 'address', 'status', 'password', 'limit'].forEach(key => {
             if (_.has(data, key)) {
                 if (key=='password' && !_.isEmpty(data.password)) {
                     result[key] = ctx.helper.getHash(data.password);
