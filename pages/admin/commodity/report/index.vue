@@ -24,7 +24,7 @@
             >导出表格</el-button>
         </template>
 
-        <Table :data="LIST">
+        <Table :data="LIST" :summary-method="getSummaries" show-summary>
             <el-table-column label="序号" prop="index" align="center" width="60" />
             <el-table-column label="开支日期" width="120" prop="use_at"  align="center" />
             <el-table-column label="开支项目（物品）名称" prop="product.name"  align="center" min-width="200" />
@@ -78,6 +78,30 @@
         },
 
         methods: {
+
+            getSummaries({ columns, data }) {
+                const sums = []
+                columns.forEach((column, index) => {
+                    if (index===5) {
+                        sums[index] = '总价';
+                        return;
+                    }
+                    if (column.property!='money') {
+                        sums[index] = '';
+                        return;
+                    }
+                    const values = data.map(item => Number(item.money));
+                    if (!values.every(value => isNaN(value))) {
+                        sums[index] = values.reduce((prev, curr) => {
+                            return  (prev * 1000 + curr * 1000 ) / 1000
+                        }, 0).toFixed(2)
+                    } else {
+                        sums[index] = ''
+                    }
+                })
+
+                return sums;
+            },
             
             // 时间切换
             async changeDate(date) {

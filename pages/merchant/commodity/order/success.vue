@@ -215,8 +215,9 @@
                     }
                     const values = data.map(item => Number(item.money));
                     if (!values.every(value => isNaN(value))) {
-                        const total = values.reduce((prev, curr) => prev + curr, 0) 
-                        sums[index] = (Math.floor(total * 100) / 100).toFixed(2)
+                        sums[index] = values.reduce((prev, curr) => {
+                            return  (prev * 1000 + curr * 1000 ) / 1000
+                        }, 0).toFixed(2)
                     } else {
                         sums[index] = ''
                     }
