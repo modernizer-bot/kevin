@@ -2,7 +2,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 21:05:01 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-17 19:55:05
+ * @Last Modified time: 2021-05-18 10:47:17
  */
 const SMSClient = require('@alicloud/sms-sdk');
 const { Service } = require('egg');
@@ -18,12 +18,12 @@ const SMS =  new SMSClient({
 const sign = {
     // 登录验证码
     REG_CODE: {
-        SignName: '调货需求系统', // 签名
+        SignName: '调货需求', // 签名
         TemplateCode: 'SMS_216828578', // 模板
     },
     // 调货通知
     ORDER_NOTICE: {
-        SignName: '调货需求系统', // 签名
+        SignName: '调货需求', // 签名
         TemplateCode: 'SMS_216844355', // 模板
     }
 };
