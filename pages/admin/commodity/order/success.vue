@@ -91,9 +91,9 @@
                     <li><label>送货人电话</label>{{ row.delivery.phone }}</li>
                     <li><label>供货时间</label>{{ $helper.formatDate(row.supplied_at, 'Y年m月d日 H:i') }}</li>
                     <el-divider content-position="left">使用人信息</el-divider>
-                    <li><label>使用人</label>{{ row.user.name }}</li>
-                    <li><label>部门</label>{{ row.user.department }}</li>
-                    <li><label>使用日期</label>{{ $helper.formatDate(row.use_at, 'Y年m月d日') }}</li>
+                    <li><label>使用人</label>{{ row.user ? row.user.name : '暂无' }}</li>
+                    <li><label>部门</label>{{ row.user ? row.user.department : '暂无' }}</li>
+                    <li><label>收货日期</label>{{ $helper.formatDate(row.use_at, 'Y年m月d日') }}</li>
                     <el-divider content-position="left">结算信息</el-divider>
                     <li><label>发票代码</label>{{ row.ticket.code }}</li>
                     <li><label>发票编号</label>{{ row.ticket.number }}</li>

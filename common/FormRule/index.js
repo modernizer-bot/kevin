@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-04-20 12:46:41 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-16 17:20:55
+ * @Last Modified time: 2021-05-19 09:30:14
  */
 
 import Admin from './admin'
@@ -104,9 +104,9 @@ export default {
             { required: true, message: '请填写审批人' },
         ],
 
-        user_id: [
-            { required: true, message: '请填写使用人' },
-        ],
+        // user_id: [
+        //     { required: true, message: '请填写使用人' },
+        // ],
 
         use_at: [
             { required: true, message: '请选择使用时间' },

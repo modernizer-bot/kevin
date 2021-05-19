@@ -37,6 +37,7 @@
                                     type="index" 
                                     width="70"
                                     index={ getIndex }
+                                    align="center"
                                 />
                             )
                         }

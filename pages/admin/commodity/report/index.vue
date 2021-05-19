@@ -63,7 +63,8 @@
                 date,
                 LIST: result.map((item, index) => {
                     item.use_at = ctx.$helper.formatDate(item.use_at, 'Y/m/d');
-                    item.use = `${ item.user.name }（${ item.user.department }）` 
+                    const department = (item.user && item.user.department) ? `（${item.user.department}）` : '';
+                    item.use = item.user ? `${ item.user.name + department }` : ''
                     item.index = index+1;
                     return item;
                 })

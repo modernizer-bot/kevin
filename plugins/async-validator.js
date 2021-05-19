@@ -3,10 +3,11 @@
  * @Author: chandre 
  * @Date: 2021-04-21 12:04:12 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-09 11:25:32
+ * @Last Modified time: 2021-05-19 09:25:15
  */
 
 import AsyncValidator from 'async-validator'
+import _ from 'underscore'
 
 
 AsyncValidator.register('mobile', (rule, value, callback) => {
@@ -21,6 +22,7 @@ AsyncValidator.register('mobile', (rule, value, callback) => {
 AsyncValidator.register('phone', (rule, value, callback) => {
     let isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;  
     let isMob = /^1[3456789]\d{9}$/;
+    if (!rule.required && _.isEmpty(value)) return callback();
     if ( isPhone.test(value) || isMob.test(value) ) {
         callback();
     } else {

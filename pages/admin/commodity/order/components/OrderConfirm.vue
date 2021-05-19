@@ -5,31 +5,24 @@
             title="确认收货"
             width="500px"
         >
+            <el-divider>订单信息</el-divider>
+            <ul class="table-expand">
+                <li><label>商品名称</label>{{ formData.product.name }}</li>
+                <li><label>设备类型</label>{{ formData.category.name }}</li>
+                <li><label>商品参数</label>{{ formData.product.params }}</li>
+                <li><label>数量</label>{{ formData.number }}</li>
+                <li><label>备注</label>{{ formData.remark }}</li>
+            </ul>
+            <el-divider>收货信息</el-divider>
             <Form :model="formData" :rules="$formRule.Order"
                 @submit.native.prevent="submitForm"
                 ref="Form"
             >
-                <FormItem label="商品名称" col="22">
-                    {{ formData.product.name }}
-                </FormItem>
-
-                <FormItem label="设备类型" col="22">
-                    {{ formData.category.name }}
-                </FormItem>
-
-                <FormItem label="商品参数" col="22">
-                    {{ formData.product.params }}
-                </FormItem>
-
-                <FormItem label="数量" col="22">
-                    {{ formData.number }}
-                </FormItem>
-
                 <FormItem prop="user_id" label="使用人" col="22">
                     <el-select 
                         v-model.trim="formData.user_id" 
                         placeholder="姓名、电话、地址、部门"
-                        style="width: 100%"
+                        style="width: 240px"
                         filterable
                         remote
                         :remote-method="searchUser"
@@ -57,6 +50,7 @@
                         type="date"
                         placeholder="选择日期"
                         :picker-options="DateTimePickerOptions"
+                        style="width: 240px"
                     />
                 </FormItem>
 
@@ -83,7 +77,7 @@
         // 使用人
         user_id: null,
         // 使用时间
-        user_at: '',
+        use_at: '',
         // 商品信息
         product: {
             name: '',
@@ -114,7 +108,9 @@
                     'number',
                     'product',
                     'category',
+                    'remark'
                 ]))
+                this.formData.use_at = this.$helper.formatDate(new Date(), 'Y-m-d');
                 this.isEdit = true;
                 this.visible = true
             },
