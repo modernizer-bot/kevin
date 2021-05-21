@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 22:58:12 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-12 18:41:22
+ * @Last Modified time: 2021-05-21 17:18:16
  */
 const { Controller } = require('egg');
 const _ = require('lodash')
@@ -81,6 +81,7 @@ class UserController extends Controller {
     async add() {
         const ctx = this.ctx;
         await ctx.validator.User.edit();
+        const data = _.pick(ctx.request.body, ['address', 'name', 'phone', 'department']);
         const result = await this.UserModel.create(data);
         return result;
     }
