@@ -17,6 +17,18 @@
                     :disabled="!selected_list.length"
                 >发送短信通知</el-button>
             </span>
+            <el-date-picker
+                v-model="searchForm.created_at"
+                type="daterange"
+                align="right"
+                range-separator="-"
+                value-format="yyyy-MM-dd"
+                start-placeholder="下单开始日期"
+                end-placeholder="下单结束日期"
+                :picker-options="DateTimePickerOptionsQuick"
+                style="width: 300px"
+                @change="onChangeFilter"
+            />
         </template>
 
         <Table :data="LIST"
@@ -76,6 +88,10 @@
     import OrderDemand from './components/OrderDemand'
     import OrderLog from './components/OrderLog'
 
+    const SEARCH_FORM = {
+        created_at: [],
+    }
+
     export default {
         watchQuery: true,
         
@@ -93,6 +109,8 @@
 
             // 查询列表
             const result = await ctx.$api.Admin.Order.List({ params });
+
+            let searchForm = Object.assign({}, SEARCH_FORM, _.pick(params, ['created_at']))
             
             // 填充页面数据
             return {
@@ -100,6 +118,7 @@
                 page: params.page,
                 size: params.size,
                 total: result.total,
+                searchForm,
                 selected_list: [],
             }
         },
@@ -118,7 +137,12 @@
         },
 
         methods: {
-
+            
+            onChangeFilter(val) {
+                this.$router.push({ query: {
+                    created_at: val
+                }});
+            },
             // 添加需求
             handlerOrderDemand(data) {
                 this.$refs.OrderDemand.show(data);

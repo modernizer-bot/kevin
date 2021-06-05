@@ -81,8 +81,8 @@
                     return LIST[item.company_id]  = item;
                 }
                 const row = LIST[item.company_id];
-                let moeny = Number(row.money) + Number(item.money);
-                row.money =  (Math.floor(moeny * 100) / 100).toFixed(2)
+                let moeny = ( Number(row.money) * 1000 + Number(item.money) * 1000 ) / 1000
+                row.money =  moeny.toFixed(2)
             })
 
 
@@ -101,7 +101,7 @@
             return {
                 year: '',
                 quarter: '',
-                total: 0.00,
+                total: '0.00',
                 LIST: [],
             }
         },
@@ -122,7 +122,7 @@
                     }
                     const values = data.map(item => Number(item.money));
                     if (!values.every(value => isNaN(value))) {
-                        sums[index] = values.reduce((prev, curr) => {
+                        this.total = sums[index] = values.reduce((prev, curr) => {
                             return  (prev * 1000 + curr * 1000 ) / 1000
                         }, 0).toFixed(2)
                     } else {
