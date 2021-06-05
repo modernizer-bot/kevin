@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-12 14:45:29 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-17 16:09:42
+ * @Last Modified time: 2021-06-05 13:50:24
  */
 
 
@@ -116,9 +116,19 @@ class OrderController extends Controller {
             status: ctx.query.status || 1,
         };
 
-        let { category_id, company_id, supplied_at, final_at } = ctx.query;
+        let { category_id, company_id, supplied_at, final_at, created_at } = ctx.query;
         company_id && ($where['company_id'] = company_id);
         category_id && ($where['category_id'] = category_id);
+
+        // 需求发布时间
+        if (!_.isEmpty(created_at)) {
+            created_at = created_at.split(",");
+            if (created_at.length===2) {
+                $where.created_at = {
+                    [Op.between] : [new Date(`${created_at[0]} 00:00:00`), new Date(`${created_at[1]} 23:59:59`)]
+                }
+            }
+        }
 
         // 供货时间筛选
         if (!_.isEmpty(supplied_at)) {
