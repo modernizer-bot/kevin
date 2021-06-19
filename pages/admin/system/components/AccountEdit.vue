@@ -14,8 +14,25 @@
                     <el-input v-model.trim="formData.username" placeholder="最多30个字符" :disabled="isEdit" />
                 </FormItem>
 
-                <FormItem prop="password" label="密码" col="21" v-if="!isEdit">
+                <!-- <FormItem prop="password" label="密码" col="21" v-if="!isEdit">
                     <el-input v-model.trim="formData.password" placeholder="10~30位，大小写字母+数字+特殊字符" />
+                </FormItem> -->
+
+                <FormItem prop="parent_id" label="所属主账号" col="21">
+                    <el-select v-model="formData.parent_id" clearable style="width: 100%" popper-class="UserSelect">
+                        <el-option
+                            v-for="item in parentAccount"
+                            :label="item.username"
+                            :value="item.id"
+                            :key="item.id"
+                        >
+                            <div class="UserSelect-item">
+                                <span class="name">{{ item.username }}</span>
+                                <p class="info">联系人：{{ item.name }}</p>
+                                <p class="info">公司：{{ item.companys.map(item => item.title).join(",") }}</p>
+                            </div>
+                        </el-option>
+                    </el-select>
                 </FormItem>
 
                 <FormItem prop="name" label="联系人" col="21">
@@ -57,7 +74,8 @@
 
     const FORM_DATA = {
         username: '',
-        password: '',
+        parent_id: '',
+        // password: '',
         name: '',
         phone: '',
         address: '',
@@ -70,27 +88,44 @@
             return {
                 visible: false,
                 isEdit: false,
-                formData: FORM_DATA
+                formData: FORM_DATA,
+                parentAccount: [],
             }
         },
 
         computed: {
             editTitle() {
                 return this.formData.id ? '修改账号' : '添加账号'
-            }
+            },
         },
 
         methods: {
 
+            // 加载主账号
+            async fetchParentAccount() {
+                const res = await this.$api.Admin.Account.List({ params: {size: 100, parent_id: 0} });
+                if (this.formData.id) {
+                    this.parentAccount = res.list.filter(item => {
+                        return item.id != this.formData.id
+                    })
+                } else {
+                    this.parentAccount = res.list;
+                }
+            },
+
             // 显示
-            show(data) {
+            async show(data) {
                 if (data) {
                     this.isEdit = true;
-                    this.formData = _.pick(data, ['id', 'username', 'name', 'phone', 'address', 'limit']);
+                    this.formData = _.pick(data, ['id', 'username', 'name', 'phone', 'address', 'limit', 'parent_id']);
+                    if (this.formData.parent_id===0) {
+                        this.formData.parent_id = ''
+                    }
                 } else {
                     this.isEdit = false;
                     this.formData = _.cloneDeep(FORM_DATA);
                 }
+                await this.fetchParentAccount();
                 this.visible = true
             },
 
@@ -107,7 +142,10 @@
                     msg = '修改成功'
                 }
 
-                const data = _.pick(this.formData, ['id', 'username', 'password', 'name', 'phone', 'address', 'limit'])
+                const data = _.pick(this.formData, ['id', 'username', 'password', 'name', 'phone', 'address', 'limit', 'parent_id'])
+                if (data.parent_id=='') {
+                    data.parent_id = 0
+                }
                 
                 await RequestMethod({ data } )
                     .then(res => {

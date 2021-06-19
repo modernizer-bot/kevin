@@ -32,8 +32,11 @@
             <el-table-column label="用户名" prop="username" width="120" align="center" fixed="left"/>
             <el-table-column label="联系人" prop="name" width="100" align="center" />
             <el-table-column label="联系电话" prop="phone" align="center" width="120" />
-            <el-table-column label="联系地址" prop="address" align="center" width="200" />
-            <el-table-column label="关联公司" v-slot="{ row }" min-width="200" align="center">
+            <el-table-column label="账号类型" align="center" width="100" v-slot="{ row }">
+                <el-tag v-if="row.parent_id==0">主账号</el-tag>
+                <el-tag type="info" v-else>子账号</el-tag>
+            </el-table-column>
+            <el-table-column label="所属公司" v-slot="{ row }" min-width="200" align="center">
                 <template v-for="(item, i) in row.companys">
                     <p :key="i">{{ item.title }}</p>
                 </template>
@@ -50,19 +53,19 @@
                 {{ $helper.formatDate(row.created_at, 'Y-m-d H:i') }}
             </el-table-column>
 
-            <el-table-column label="操作" width="220" v-slot="{ row }" align="center"  fixed="right">
+            <el-table-column label="操作" width="150" v-slot="{ row }" align="center"  fixed="right">
                 <el-link size="small" type="primary" @click="handleEdit(row)">修改</el-link>
                 <el-divider direction="vertical"/>
                 <el-link size="small" type="primary" @click="handleBindCompany(row)">关联公司</el-link>
-                <el-divider direction="vertical"/>
-                <el-link size="small" type="danger" @click="handleResetPassword(row)">重置密码</el-link>
+                <!-- <el-divider direction="vertical"/> -->
+                <!-- <el-link size="small" type="danger" @click="handleResetPassword(row)">重置密码</el-link> -->
             </el-table-column>
         </Table>
 
 
         <!-- 编辑 -->
         <AccountEdit ref="AccountEdit" />
-        <ResetPassword ref="ResetPassword" />
+        <!-- <ResetPassword ref="ResetPassword" /> -->
         <BindCompany ref="BindCompany" />
 
 
@@ -73,14 +76,15 @@
 <script>
     import _ from 'underscore'
     import AccountEdit from './components/AccountEdit'
-    import ResetPassword from './components/ResetPassword'
+    // import ResetPassword from './components/ResetPassword'
     import BindCompany from './components/BindCompany'
 
     export default {
 
         watchQuery: true,
 
-        components: { AccountEdit, ResetPassword, BindCompany },
+        components: { AccountEdit, BindCompany },
+        // components: { AccountEdit, ResetPassword, BindCompany },
 
         async asyncData(ctx) {
             // 请求参数

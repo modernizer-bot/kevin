@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-04-14 22:41:36 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-16 15:07:34
+ * @Last Modified time: 2021-06-16 11:12:10
  */
 import Vue from 'vue'
 
@@ -48,6 +48,7 @@ import {
     Avatar,
     Divider,
     Link,
+    Tag,
 
 } from 'element-ui'
 
@@ -77,6 +78,7 @@ Vue.use(DatePicker)
 Vue.use(Dialog);
 Vue.use(Popover);
 Vue.use(Tooltip);
+Vue.use(Tag);
 
 // 消息、提示
 Vue.use(Loading.directive);

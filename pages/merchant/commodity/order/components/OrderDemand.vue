@@ -61,34 +61,7 @@
                     </el-form-item>
                 </el-table-column>
 
-                <el-table-column label="需求接收方" v-slot="{ row, $index }"  width="180" align="center">
-                    <el-form-item :prop="`formData.${$index}.account_id`" :rules='$formRule.Order.account_id'>
-                        <el-select 
-                            v-model.trim="row.account_id" 
-                            placeholder="用户名、姓名、电话"
-                            style="width: 100%"
-                            filterable
-                            remote
-                            :remote-method="searchAccount"
-                            popper-class="UserSelect"
-                        >
-                            <el-option 
-                                v-for="item in ACCOUNT_LIST"
-                                :key="item.id"
-                                :value="item.id"
-                                :label="item.name"
-                            >
-                                <div class="UserSelect-item">
-                                    <span class="name">{{ item.name }}</span>
-                                    <p class="info">用户名：{{ item.username }}</p>
-                                    <p class="info">电话：{{ item.phone }}</p>
-                                </div>
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-table-column>
-
-                <el-table-column label="备注" v-slot="{ row, $index }" width="150" align="center">
+                <el-table-column label="备注" v-slot="{ row, $index }" width="200" align="center">
                     <el-form-item :prop="`formData.${$index}.remark`" :rules='$formRule.Order.remark'>
                         <el-input 
                             v-model="row.remark" 
@@ -133,7 +106,7 @@
         // 接收账号
         account_id: null,
         // 经办人
-        agent: '',
+        agent: '徐凯',
         // 备注
         remark: '',
     }
@@ -155,7 +128,7 @@
         computed: {
             ...mapState(['CATEGORY']),
             editTitle() {
-                return this.isEdit ? '修改需求' : '发布需求'
+                return this.isEdit ? '修改需求' : '添加需求'
             }
         },
 
@@ -165,7 +138,9 @@
             // 添加行
             addRow() {
                 const row = _.cloneDeep(FORM_DATA)
-                row.agent = this.$store.state.USER_INFO.name;
+                // row.agent = this.$store.state.USER_INFO.name;
+                const USER_INFO = this.$store.state.USER_INFO;
+                row.account_id = USER_INFO.parent_id || USER_INFO.id;
                 this.data.formData.push(row)
             },
 
@@ -191,17 +166,12 @@
                 } else {
                     this.isEdit = false;
                     const row = _.cloneDeep(FORM_DATA)
-                    row.agent = this.$store.state.USER_INFO.name;
+                    const USER_INFO = this.$store.state.USER_INFO;
+                    row.account_id = USER_INFO.parent_id || USER_INFO.id;
+                    // row.agent = this.$store.state.USER_INFO.name;
                     this.data.formData = [row];
                 }
                 this.visible = true
-            },
-
-            // 搜索接收方主账号
-            searchAccount(keyword) {
-                this.$api.Admin.Account.List({ params: { keyword, size: 15, parent_id: 0 } }).then(res => {
-                    this.ACCOUNT_LIST = res.list;
-                }).catch(this.throw)
             },
 
             // 搜索审批人
@@ -219,7 +189,7 @@
 
                 let data = this.data.formData.map(item => {
                     return _.pick(item, ['id', 'desc', 'category_id', 'account_id', 'check', 'number', 'remark', 'agent'])
-                })
+                });
 
                 let RequestMethod = this.$api.Admin.Order.Add, 
                     msg = '添加成功';
@@ -229,6 +199,9 @@
                     msg = '修改成功'
                     data = data[0];
                 }
+
+                console.log(data);
+
 
                 await RequestMethod({ data } )
                     .then(res => {

@@ -21,12 +21,12 @@
                         />
                     </el-form-item>
 
-                    <el-form-item prop="password">
+                    <!-- <el-form-item prop="password">
                         <el-input v-model="formData.password" showPassword 
                             prefix-icon="el-icon-key" 
                             placeholder="密码"
                         />
-                    </el-form-item>
+                    </el-form-item> -->
 
                     <el-form-item prop="code" class="Login-Form-vcode">
                         <el-input v-model="formData.code"
@@ -67,7 +67,7 @@
                 // 登录表单
                 formData: {
                     username: '',
-                    password: '',
+                    // password: '',
                     code: '',
                 }
             }

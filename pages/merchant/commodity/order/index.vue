@@ -8,6 +8,7 @@
         </template>
 
         <template slot="tools">
+            <el-button icon="el-icon-plus" type="primary" @click="handlerOrderDemand()">添加需求</el-button>
             <el-button  
                 :disabled="!selected_list.length"
                 type="primary"
@@ -36,24 +37,30 @@
             </el-table-column>
 
             <el-table-column label="操作" width="120" v-slot="{ row }" align="center" fixed="right">
-                <el-link size="small" type="primary" @click="handlerOrderCommodity([row])">处理需求</el-link>
+                <el-link size="small" type="primary" @click="handlerOrderDemand([row])">修改</el-link>
+                <el-divider direction="vertical"/>
+                <el-link size="small" type="primary" @click="handlerOrderCommodity([row])">处理</el-link>
             </el-table-column>
             
         </Table>
 
         <!-- 填写需求商品 -->
         <OrderCommodity ref="OrderCommodity" />
+        <OrderDemand ref="OrderDemand" />
 
     </AdminPage>
 </template>
 
 <script>
+    import OrderDemand from './components/OrderDemand'
     import OrderCommodity from './components/OrderCommodity'
+
     export default {
         watchQuery: true,
         
         components: {
-            OrderCommodity
+            OrderCommodity,
+            OrderDemand
         },
 
         async asyncData(ctx) {
@@ -99,6 +106,11 @@
             // 处理需求商品
             handlerOrderCommodity(data) {
                 this.$refs.OrderCommodity.show(data)
+            },
+
+            // 添加需求
+            handlerOrderDemand(data) {
+                this.$refs.OrderDemand.show(data);
             },
             
         }

@@ -32,10 +32,10 @@
                         <i class="el-icon-edit"></i>
                         <span>修改个人资料</span>
                     </a>
-                    <a href="javascript:;" class="Admin-Header-UserCard_item" @click="clickResetPass">
+                    <!-- <a href="javascript:;" class="Admin-Header-UserCard_item" @click="clickResetPass">
                         <i class="el-icon-key"></i>
                         <span>修改密码</span>
-                    </a>
+                    </a> -->
                     <div class="Admin-Header-UserCard_divider" />
                     <a href="javascript:;" class="Admin-Header-UserCard_item" @click="clickLogout">
                         <i class="el-icon-switch-button"></i>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- 修改密码 -->
-        <Dialog title="修改密码" :isReload="true" :visible.sync="visiblePass" width="450px">
+        <!-- <Dialog title="修改密码" :isReload="true" :visible.sync="visiblePass" width="450px">
             <Form :model="passwordForm" 
                 @submit.native.prevent="submitResetPass"
                 :rules="$formRule.ResetPass"
@@ -67,7 +67,7 @@
                     <el-button size="default" type="primary" native-type="submit" :loading="isLoading">确定</el-button>
                 </FormItem>
             </Form>
-        </Dialog>
+        </Dialog> -->
 
         <!-- 修改个人资料 -->
         <Dialog title="修改个人资料" :isReload="true" :visible.sync="visibleProfile" width="450px">

@@ -2,7 +2,7 @@
  * @Author: chandre 
  * @Date: 2021-04-15 22:54:45 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-16 15:42:59
+ * @Last Modified time: 2021-06-19 22:24:38
  */
 import Menu from '@/common/Menu'
 
@@ -60,8 +60,9 @@ export default {
         // 重置登录数据状态
         RESET_LOGIN_STATE(state) {
             state.USER_INFO = null;
-            this.ACCOUNT_COMPANY = [];
-            this.CATEGORY = [];
+            state.ACCOUNT_COMPANY = [];
+            state.CATEGORY = [];
+            state.MENU = [];
             this.$cookies.remove('token');
             this.$router.replace("/login")
         },
@@ -109,8 +110,8 @@ export default {
         // 退出登录
         async LOGOUT(ctx) {
             this.commit('RESET_LOGIN_STATE');
-            this.commit('SET_USER_MENU', []); //清空后台菜单
-            return res;
+            // this.commit('SET_USER_MENU', []); //清空后台菜单
+            return;
         },
 
         // 登录状态获取用户基本信息
