@@ -2,7 +2,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 21:05:01 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-14 18:01:19
+ * @Last Modified time: 2021-06-16 11:19:24
  */
 const { Service } = require('egg');
 const _ = require('lodash')
@@ -19,7 +19,7 @@ class AuthService extends Service {
         if (!this[ACCOUNT_INFO]) {
             const token = this.getToken();
             const data = this.app.jwt.decode(token);
-            this[ACCOUNT_INFO] = _.pick(data, [ 'id', 'username', 'type', 'companys' ])
+            this[ACCOUNT_INFO] = _.pick(data, [ 'id', 'username', 'type', 'companys', 'parent_id'])
         }
         return this[ACCOUNT_INFO]
     }

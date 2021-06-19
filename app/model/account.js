@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 17:29:54 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-18 12:33:18
+ * @Last Modified time: 2021-06-16 11:08:18
  */
 
 
@@ -15,6 +15,8 @@ module.exports = app => {
         id: { type: INTEGER, primaryKey: true, autoIncrement: true },
         // 账号类型
         type: ENUM('admin', 'company'),
+        // 所属主账号
+        parent_id: INTEGER,
         // 账号
         username: STRING(32),
         // 密码

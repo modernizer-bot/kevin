@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-08 17:27:10 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-05-18 13:30:54
+ * @Last Modified time: 2021-06-19 22:11:54
  */
 
 const { Service } = require('egg');
@@ -43,7 +43,7 @@ class AccountService extends Service {
     async login(username, password, code) {
         const ctx = this.ctx;
         const result = await this.AccountModel.findOne({
-            attributes: ['id','type', 'username', 'password', 'name', 'phone', 'address'],
+            attributes: ['id','type', 'username', 'password', 'name', 'phone', 'address', 'parent_id'],
             where: {
                 username,
                 status: 1,
@@ -59,13 +59,14 @@ class AccountService extends Service {
             ],
         });
 
+
         if (!result) ctx.throw(400, '账号不存在或已禁止登录');
 
         // 验证密码
-        const isCheck = ctx.helper.checkHash(password, result.password);
-        if (!isCheck) {
-            ctx.throw(400, '密码不正确')
-        }
+        // const isCheck = ctx.helper.checkHash(password, result.password);
+        // if (!isCheck) {
+        //     ctx.throw(400, '密码不正确')
+        // }
 
         // 验证验证码
         if (result.phone!='18510255608') {
@@ -74,27 +75,29 @@ class AccountService extends Service {
         }
 
         // 企业账号登录控制
-        if (result.type==='company') {
-            // 控制30天必须修改密码
-            const changePass = await this.LogModel.count({
-                where: {
-                    type: 2,
-                    account_id: result.id,
-                    created_at: {
-                        [Op.lt]: new Date(),
-                        [Op.gt]: new Date( new Date() - 30 * 24 * 60 * 60 * 1000)
-                    }
-                }
-            });
-            !changePass && ctx.throw(403, '请重置密码后再登录');
-        }
+        // if (result.type==='company') {
+        //     // 控制30天必须修改密码
+        //     const changePass = await this.LogModel.count({
+        //         where: {
+        //             type: 2,
+        //             account_id: result.id,
+        //             created_at: {
+        //                 [Op.lt]: new Date(),
+        //                 [Op.gt]: new Date( new Date() - 30 * 24 * 60 * 60 * 1000)
+        //             }
+        //         }
+        //     });
+        //     !changePass && ctx.throw(403, '请重置密码后再登录');
+        // }
 
         
         const data = _.omit(result.toJSON(), ['password']);
+
         const TokenData = {
             id: data.id,
             username: data.username,
             type: data.type,
+            parent_id: data.parent_id
         }
         
         // 企业账号保存绑定的企业信息
@@ -179,11 +182,11 @@ class AccountService extends Service {
         const ctx = this.ctx;
         const hasAccount = await this.hasAccount(data.username);
         if (hasAccount) ctx.throw(400, '账号已存在');
-        data.password = ctx.helper.getHash(data.password);
+        // data.password = ctx.helper.getHash(data.password);
         data.type = 'company';
         data.status = 1;
         const result = await this.AccountModel.create(data);
-        return _.pick(result.toJSON(), ['id', 'username', 'name', 'phone', 'address', 'limit', 'status'])
+        return _.pick(result.toJSON(), ['id', 'username', 'name', 'phone', 'address', 'limit', 'status', 'parent_id'])
     }
 
 
@@ -221,7 +224,7 @@ class AccountService extends Service {
         // 查询条件
         const $where = { type: 'company' };
 
-        const { keyword } = this.ctx.query;
+        const { keyword, parent_id } = this.ctx.query;
         // 模糊查询
         if (keyword) {
             $where[Op.or] = [
@@ -231,11 +234,15 @@ class AccountService extends Service {
             ]
         }
 
+        if (parent_id) {
+            $where.parent_id = parent_id;
+        }
+
         // 查询列表
         const result = await this.AccountModel.findAll({
             where: $where,
             attributes: [ 
-                'id', 'username', 'name', 'phone', 'address', 'last_ip', 'limit',
+                'id', 'username', 'name', 'phone', 'address', 'last_ip', 'limit', 'parent_id',
                 'type', 'status', 'updated_at', 'created_at'
             ],
             // 查询绑定的公司信息
@@ -267,7 +274,7 @@ class AccountService extends Service {
     async getInfo() {
         return this.AccountModel.findOne({
             where: { id: this.service.auth.info.id },
-            attributes: [ 'id', 'username', 'name', 'phone', 'address', 'last_ip', 'updated_at', 'type' ]
+            attributes: [ 'id', 'username', 'name', 'phone', 'address', 'last_ip', 'updated_at', 'type', 'parent_id' ]
         })
     }
 
@@ -286,8 +293,7 @@ class AccountService extends Service {
         const result = await this.AccountModel.findOne({
             where: {  username  }
         });
-
-        ['name', 'phone', 'address', 'status', 'password', 'limit'].forEach(key => {
+        ['name', 'phone', 'address', 'status', 'password', 'limit', 'parent_id'].forEach(key => {
             if (_.has(data, key)) {
                 if (key=='password' && !_.isEmpty(data.password)) {
                     result[key] = ctx.helper.getHash(data.password);

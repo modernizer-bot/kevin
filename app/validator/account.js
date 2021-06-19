@@ -20,7 +20,6 @@ class AccountValidator extends Validator {
     async login() {
         const rules = {
             username: 'required|string',
-            password: 'required|string',
             code: 'required|string'
         }
         await this.check(this.ctx.request.body, rules)
@@ -30,7 +29,7 @@ class AccountValidator extends Validator {
     async add() {
         const rules = {
             username: 'required|string|max:32',
-            password: 'required|password',
+            // password: 'required|password',
             name: 'string|max:32',
             phone: 'string|max:32'
         }
@@ -41,7 +40,7 @@ class AccountValidator extends Validator {
     async update() {
         const rules = {
             username: 'required|string',
-            password: 'password',
+            // password: 'password',
             name: 'string|max:32',
             phone: 'string|max:32',
             status: 'integer'

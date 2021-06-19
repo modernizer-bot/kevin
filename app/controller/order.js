@@ -3,7 +3,7 @@
  * @Author: chandre 
  * @Date: 2021-05-12 14:45:29 
  * @Last Modified by: chandre
- * @Last Modified time: 2021-06-05 13:50:24
+ * @Last Modified time: 2021-06-19 22:20:07
  */
 
 
@@ -50,7 +50,7 @@ class OrderController extends Controller {
 
     // 添加商品需求订单
     @HttpPost('/add')
-    @Middleware(Auth('admin.order.add'))
+    @Middleware(Auth('order.add'))
     async add() {
         const { ctx } = this;
         const reqData = ctx.request.body;
@@ -75,7 +75,7 @@ class OrderController extends Controller {
 
     // 修改商品需求订单
     @HttpPost('/update')
-    @Middleware(Auth('admin.order.update'))
+    @Middleware(Auth('order.update'))
     async update() {
         const ctx = this.ctx;
         
@@ -259,12 +259,13 @@ class OrderController extends Controller {
 
         // 企业账号只可以查询绑定公司的信息
         const AccountInfo = ctx.service.auth.info;
-        if (AccountInfo.type=='company') {
-            $where.account_id = AccountInfo.id;
+        $where.account_id = AccountInfo.parent_id || AccountInfo.id;
+        
+        if ($where.status > 1) {
+            // 只查询当前账号绑定的公司
+            $where['company_id'] = company_id || AccountInfo.companys;
+            category_id && ($where['category_id'] = category_id);
         }
-
-        company_id && ($where['company_id'] = company_id);
-        category_id && ($where['category_id'] = category_id);
 
         // 供货时间筛选
         if (!_.isEmpty(supplied_at)) {
