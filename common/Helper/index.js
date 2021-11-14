@@ -5,10 +5,10 @@
  * @Last Modified by: chandre
  * @Last Modified time: 2021-05-14 11:45:55
  */
-import formatDate from './FormatDate'
-import randomString from './RandomString'
+import formatDate from './FormatDate.js'
+import randomString from './RandomString.js'
 import _ from "underscore"
-import cloneDeep from './CloneDeep'
+import cloneDeep from './CloneDeep.js'
 
 export default {
     // 日期时间格式化

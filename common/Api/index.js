@@ -6,8 +6,8 @@
  * @Last Modified time: 2021-05-16 13:57:46
  */
 
-import Admin from './admin';
-import Uploader from './uploader';
+import Admin from './admin.js';
+import Uploader from './uploader.js';
 
 export default {
     

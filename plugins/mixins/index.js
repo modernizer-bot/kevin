@@ -7,9 +7,9 @@
  */
 
 import Vue from 'vue'
-import components from "./components"
-import data from "./data"
-import methods from "./methods"
+import components from "./components.js"
+import data from "./data.js"
+import methods from "./methods.js"
 
 Vue.mixin({
     // 自定义通用组件

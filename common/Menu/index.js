@@ -1,6 +1,6 @@
 
-import AdminMenu from "./admin"
-import Merchant from "./merchant"
+import AdminMenu from "./admin.js"
+import Merchant from "./merchant.js"
 
 export default {
     admin: AdminMenu,

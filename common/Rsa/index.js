@@ -1,4 +1,4 @@
-import BigInteger from './jsbn'
+import BigInteger from './jsbn.js'
 
 var RSAPublicKey = function($modulus, $encryptionExponent) {
     this.modulus = new BigInteger(Hex.encode($modulus), 16);

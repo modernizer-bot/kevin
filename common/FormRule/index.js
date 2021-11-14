@@ -6,7 +6,7 @@
  * @Last Modified time: 2021-05-19 09:30:14
  */
 
-import Admin from './admin'
+import Admin from './admin.js'
 
 export default {
     // 后台
